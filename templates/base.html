@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MediTrack</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; }
+    nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
+    table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+    th { background: #007bff; color: white; }
+    .btn { padding: 8px 14px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    input, select, textarea { padding: 6px; margin: 4px 0 10px 0; width: 100%; box-sizing: border-box; }
+    .card { background: white; padding: 16px; margin: 10px 0; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Dashboard</a>
+    <a href="/equipment">Equipment List</a>
+    <a href="/equipment/add">Add Equipment</a>
+  </nav>
+  <hr>
+  {% block content %}{% endblock %}
+</body>
+</html>

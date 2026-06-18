@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add Maintenance Log</h2>
+<form method="post">
+  Date: <input type="date" name="maintenance_date" required>
+  Technician: <input name="technician_name" required>
+  Issue Reported: <textarea name="issue_reported"></textarea>
+  Resolution Notes: <textarea name="resolution_notes"></textarea>
+  Next Due Date: <input type="date" name="next_due_date">
+  <button class="btn" type="submit">Save Log</button>
+</form>
+{% endblock %}

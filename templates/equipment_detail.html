@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ equip.equipment_name }} ({{ equip.serial_number }})</h2>
+<p>Department: {{ equip.department }} | Status: {{ equip.status }} | Purchased: {{ equip.purchase_date }}</p>
+<form method="post" action="/equipment/{{ equip.equipment_id }}/status" style="display:inline">
+  <select name="status">
+    <option>Active</option><option>Under Maintenance</option><option>Decommissioned</option>
+  </select>
+  <button class="btn" type="submit">Update Status</button>
+</form>
+<a href="/maintenance/add/{{ equip.equipment_id }}"><button class="btn">Add Maintenance Log</button></a>
+<h3>Maintenance History</h3>
+{% if logs %}
+<table><tr><th>Date</th><th>Technician</th><th>Issue</th><th>Resolution</th><th>Next Due</th></tr>
+{% for log in logs %}
+<tr><td>{{ log.maintenance_date }}</td><td>{{ log.technician_name }}</td>
+    <td>{{ log.issue_reported }}</td><td>{{ log.resolution_notes }}</td>
+    <td>{{ log.next_due_date }}</td></tr>
+{% endfor %}</table>
+{% else %}<p>No maintenance records yet.</p>{% endif %}
+{% endblock %}

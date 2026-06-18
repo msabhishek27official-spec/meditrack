@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>MediTrack Dashboard</h2>
+<div class="card"><strong>Total Equipment:</strong> {{ total }}</div>
+<div class="card">
+  <h3>By Status</h3>
+  {% for row in by_status %}
+    <p>{{ row.status }}: {{ row.count }}</p>
+  {% endfor %}
+</div>
+<div class="card">
+  <h3>⚠️ Overdue Maintenance</h3>
+  {% if overdue %}
+  <table><tr><th>Equipment</th><th>Serial</th><th>Department</th><th>Due Date</th></tr>
+  {% for item in overdue %}
+  <tr><td>{{ item.equipment_name }}</td><td>{{ item.serial_number }}</td>
+      <td>{{ item.department }}</td><td>{{ item.next_due_date }}</td></tr>
+  {% endfor %}</table>
+  {% else %}<p>No overdue items.</p>{% endif %}
+</div>
+{% endblock %}

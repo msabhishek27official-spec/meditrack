@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Equipment List</h2>
+<form method="get">
+  Department: <input name="department" value="{{ dept }}" style="width:150px">
+  Status: <select name="status"><option value="">All</option>
+    <option {% if status=='Active' %}selected{% endif %}>Active</option>
+    <option {% if status=='Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+    <option {% if status=='Decommissioned' %}selected{% endif %}>Decommissioned</option>
+  </select>
+  <button class="btn" type="submit">Filter</button>
+</form>
+<table><tr><th>Name</th><th>Serial</th><th>Department</th><th>Status</th><th>Detail</th></tr>
+{% for e in equipment %}
+<tr><td>{{ e.equipment_name }}</td><td>{{ e.serial_number }}</td>
+    <td>{{ e.department }}</td><td>{{ e.status }}</td>
+    <td><a href="/equipment/{{ e.equipment_id }}">View</a></td></tr>
+{% endfor %}</table>
+{% endblock %}
