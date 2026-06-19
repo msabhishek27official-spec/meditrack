@@ -1,25 +1,311 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>MediTrack</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediTrack | Hospital Equipment Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; }
-    nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
-    table { border-collapse: collapse; width: 100%; background: white; }
-    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
-    th { background: #007bff; color: white; }
-    .btn { padding: 8px 14px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
-    input, select, textarea { padding: 6px; margin: 4px 0 10px 0; width: 100%; box-sizing: border-box; }
-    .card { background: white; padding: 16px; margin: 10px 0; border-radius: 6px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4f8;
+      color: #2d3748;
+    }
+
+    /* TOP NAVBAR */
+    .navbar {
+      background: linear-gradient(135deg, #1a365d, #2b6cb0);
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .navbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .navbar .brand span {
+      color: #63b3ed;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 6px;
+    }
+    .navbar nav a {
+      color: #bee3f8;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .navbar nav a:hover {
+      background: rgba(255,255,255,0.15);
+      color: white;
+    }
+
+    /* SIDEBAR + MAIN LAYOUT */
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 64px);
+    }
+    .sidebar {
+      width: 220px;
+      background: #1e3a5f;
+      padding: 24px 0;
+      flex-shrink: 0;
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      color: #a0aec0;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-left: 3px solid #63b3ed;
+    }
+    .sidebar .section-title {
+      color: #4a6fa5;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 16px 24px 8px;
+    }
+
+    /* MAIN CONTENT */
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a365d;
+    }
+    .page-header p {
+      color: #718096;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    /* STAT CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      border-top: 4px solid #2b6cb0;
+    }
+    .stat-card.green { border-top-color: #38a169; }
+    .stat-card.orange { border-top-color: #dd6b20; }
+    .stat-card.red { border-top-color: #e53e3e; }
+    .stat-card .label {
+      font-size: 12px;
+      color: #718096;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a365d;
+      margin-top: 6px;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    thead th {
+      background: #ebf4ff;
+      color: #2b6cb0;
+      font-weight: 600;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 2px solid #bee3f8;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    tbody tr {
+      border-bottom: 1px solid #edf2f7;
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: #f7fafc; }
+    td { padding: 12px 14px; color: #4a5568; }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge.active { background: #c6f6d5; color: #276749; }
+    .badge.maintenance { background: #feebc8; color: #c05621; }
+    .badge.decommissioned { background: #fed7d7; color: #9b2c2c; }
+
+    /* FORMS */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #2d3748;
+      background: #f7fafc;
+      transition: border 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #2b6cb0;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(43,108,176,0.1);
+    }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+
+    /* BUTTONS */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary { background: #2b6cb0; color: white; }
+    .btn-primary:hover { background: #2c5282; }
+    .btn-success { background: #38a169; color: white; }
+    .btn-success:hover { background: #276749; }
+    .btn-warning { background: #dd6b20; color: white; }
+    .btn-warning:hover { background: #c05621; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+    /* ALERTS */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .alert-warning { background: #fffbeb; border-left: 4px solid #f6ad55; color: #92400e; }
+    .alert-danger  { background: #fff5f5; border-left: 4px solid #fc8181; color: #742a2a; }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: #a0aec0;
+      border-top: 1px solid #e2e8f0;
+      background: white;
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="/">Dashboard</a>
-    <a href="/equipment">Equipment List</a>
-    <a href="/equipment/add">Add Equipment</a>
-  </nav>
-  <hr>
-  {% block content %}{% endblock %}
+
+  <!-- TOP NAVBAR -->
+  <div class="navbar">
+    <a href="/" class="brand">🏥 Medi<span>Track</span></a>
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/equipment">Equipment</a>
+      <a href="/equipment/add">+ Add Equipment</a>
+    </nav>
+  </div>
+
+  <!-- SIDEBAR + MAIN -->
+  <div class="layout">
+    <div class="sidebar">
+      <div class="section-title">Main Menu</div>
+      <a href="/">📊 Dashboard</a>
+      <a href="/equipment">🔧 Equipment List</a>
+      <a href="/equipment/add">➕ Add Equipment</a>
+      <div class="section-title">Reports</div>
+      <a href="/api/overdue">⚠️ Overdue JSON</a>
+    </div>
+
+    <div class="main">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <div class="footer">
+    MediTrack © 2025 — Hospital Equipment & Inventory Management System
+  </div>
+
 </body>
 </html>
