@@ -12,37 +12,43 @@ def get_db():
         host=os.getenv("DB_HOST"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
-        db=os.getenv("DB_NAME"),
-        cursorclass=pymysql.cursors.DictCursor
+        database=os.getenv("DB_NAME"),
+        cursorclass=pymysql.cursors.DictCursor,
+        connect_timeout=3
     )
 
 def init_db():
-    conn = get_db()
-    with conn.cursor() as cur:
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS equipment (
-                equipment_id INT AUTO_INCREMENT PRIMARY KEY,
-                equipment_name VARCHAR(100) NOT NULL,
-                serial_number VARCHAR(50) UNIQUE NOT NULL,
-                department VARCHAR(100),
-                purchase_date DATE,
-                status VARCHAR(50) DEFAULT 'Active'
-            )
-        """)
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS maintenance_log (
-                log_id INT AUTO_INCREMENT PRIMARY KEY,
-                equipment_id INT,
-                maintenance_date DATE,
-                technician_name VARCHAR(100),
-                issue_reported TEXT,
-                resolution_notes TEXT,
-                next_due_date DATE,
-                FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
-            )
-        """)
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db()
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS equipment (
+                    equipment_id INT AUTO_INCREMENT PRIMARY KEY,
+                    equipment_name VARCHAR(100) NOT NULL,
+                    serial_number VARCHAR(50) UNIQUE NOT NULL,
+                    department VARCHAR(100),
+                    purchase_date DATE,
+                    status VARCHAR(50) DEFAULT 'Active'
+                )
+            """)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS maintenance_log (
+                    log_id INT AUTO_INCREMENT PRIMARY KEY,
+                    equipment_id INT,
+                    maintenance_date DATE,
+                    technician_name VARCHAR(100),
+                    issue_reported TEXT,
+                    resolution_notes TEXT,
+                    next_due_date DATE,
+                    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
+                )
+            """)
+        conn.commit()
+        conn.close()
+        print("✓ Database initialized successfully")
+    except Exception as e:
+        print(f"⚠ Database connection error: {e}")
+        print("  Check your .env file and ensure the MySQL server is running.")
 
 @app.route("/")
 def dashboard():
@@ -154,4 +160,4 @@ def overdue_json():
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port = 5000,debug=True)
