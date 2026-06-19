@@ -1,12 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Add Maintenance Log</h2>
-<form method="post">
-  Date: <input type="date" name="maintenance_date" required>
-  Technician: <input name="technician_name" required>
-  Issue Reported: <textarea name="issue_reported"></textarea>
-  Resolution Notes: <textarea name="resolution_notes"></textarea>
-  Next Due Date: <input type="date" name="next_due_date">
-  <button class="btn" type="submit">Save Log</button>
-</form>
+
+<div class="page-header">
+  <h1>🛠️ Add Maintenance Log</h1>
+  <p>Record a new maintenance or calibration entry</p>
+</div>
+
+<div class="card" style="max-width:600px;">
+  <h3>Maintenance Details</h3>
+  <form method="post">
+    <div class="form-group">
+      <label>Maintenance Date</label>
+      <input type="date" name="maintenance_date" required>
+    </div>
+    <div class="form-group">
+      <label>Technician Name</label>
+      <input name="technician_name" placeholder="Full name of technician" required>
+    </div>
+    <div class="form-group">
+      <label>Issue Reported</label>
+      <textarea name="issue_reported" placeholder="Describe the issue or reason for maintenance"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Resolution Notes</label>
+      <textarea name="resolution_notes" placeholder="What was done to resolve the issue"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Next Due Date</label>
+      <input type="date" name="next_due_date">
+    </div>
+    <button class="btn btn-success" type="submit">✅ Save Log</button>
+    <a href="javascript:history.back()" class="btn btn-primary" style="background:#718096; margin-left:8px;">Cancel</a>
+  </form>
+</div>
+
 {% endblock %}

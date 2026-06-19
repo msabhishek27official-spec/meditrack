@@ -1,14 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Add Equipment</h2>
-<form method="post">
-  Name: <input name="equipment_name" required>
-  Serial Number: <input name="serial_number" required>
-  Department: <input name="department">
-  Purchase Date: <input type="date" name="purchase_date">
-  Status: <select name="status">
-    <option>Active</option><option>Under Maintenance</option><option>Decommissioned</option>
-  </select>
-  <button class="btn" type="submit">Add Equipment</button>
-</form>
+
+<div class="page-header">
+  <h1>➕ Add New Equipment</h1>
+  <p>Register a new piece of medical equipment in the system</p>
+</div>
+
+<div class="card" style="max-width: 600px;">
+  <h3>Equipment Details</h3>
+  <form method="post">
+    <div class="form-group">
+      <label>Equipment Name</label>
+      <input name="equipment_name" placeholder="e.g. Ventilator, Infusion Pump" required>
+    </div>
+    <div class="form-group">
+      <label>Serial Number</label>
+      <input name="serial_number" placeholder="Unique serial number" required>
+    </div>
+    <div class="form-group">
+      <label>Department</label>
+      <select name="department">
+        <option>ICU</option>
+        <option>Emergency</option>
+        <option>Pediatrics</option>
+        <option>Radiology</option>
+        <option>Surgery</option>
+        <option>General Ward</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Purchase Date</label>
+      <input type="date" name="purchase_date">
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        <option>Active</option>
+        <option>Under Maintenance</option>
+        <option>Decommissioned</option>
+      </select>
+    </div>
+    <button class="btn btn-success" type="submit">✅ Add Equipment</button>
+    <a href="/equipment" class="btn btn-primary" style="background:#718096; margin-left:8px;">Cancel</a>
+  </form>
+</div>
+
 {% endblock %}

@@ -1,21 +1,80 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>{{ equip.equipment_name }} ({{ equip.serial_number }})</h2>
-<p>Department: {{ equip.department }} | Status: {{ equip.status }} | Purchased: {{ equip.purchase_date }}</p>
-<form method="post" action="/equipment/{{ equip.equipment_id }}/status" style="display:inline">
-  <select name="status">
-    <option>Active</option><option>Under Maintenance</option><option>Decommissioned</option>
-  </select>
-  <button class="btn" type="submit">Update Status</button>
-</form>
-<a href="/maintenance/add/{{ equip.equipment_id }}"><button class="btn">Add Maintenance Log</button></a>
-<h3>Maintenance History</h3>
-{% if logs %}
-<table><tr><th>Date</th><th>Technician</th><th>Issue</th><th>Resolution</th><th>Next Due</th></tr>
-{% for log in logs %}
-<tr><td>{{ log.maintenance_date }}</td><td>{{ log.technician_name }}</td>
-    <td>{{ log.issue_reported }}</td><td>{{ log.resolution_notes }}</td>
-    <td>{{ log.next_due_date }}</td></tr>
-{% endfor %}</table>
-{% else %}<p>No maintenance records yet.</p>{% endif %}
+
+<div class="page-header">
+  <h1>🔧 {{ equip.equipment_name }}</h1>
+  <p>Serial: {{ equip.serial_number }} | Department: {{ equip.department }}</p>
+</div>
+
+<!-- EQUIPMENT INFO -->
+<div class="card">
+  <h3>Equipment Information</h3>
+  <table>
+    <tbody>
+      <tr><td><strong>Equipment Name</strong></td><td>{{ equip.equipment_name }}</td></tr>
+      <tr><td><strong>Serial Number</strong></td><td>{{ equip.serial_number }}</td></tr>
+      <tr><td><strong>Department</strong></td><td>{{ equip.department }}</td></tr>
+      <tr><td><strong>Purchase Date</strong></td><td>{{ equip.purchase_date }}</td></tr>
+      <tr>
+        <td><strong>Status</strong></td>
+        <td>
+          <span class="badge {% if equip.status == 'Active' %}active{% elif equip.status == 'Under Maintenance' %}maintenance{% else %}decommissioned{% endif %}">
+            {{ equip.status }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- UPDATE STATUS -->
+<div class="card">
+  <h3>✏️ Update Status</h3>
+  <form method="post" action="/equipment/{{ equip.equipment_id }}/status" style="display:flex; gap:12px; align-items:flex-end;">
+    <div class="form-group" style="margin:0; flex:1;">
+      <label>Change Status To</label>
+      <select name="status">
+        <option {% if equip.status=='Active' %}selected{% endif %}>Active</option>
+        <option {% if equip.status=='Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+        <option {% if equip.status=='Decommissioned' %}selected{% endif %}>Decommissioned</option>
+      </select>
+    </div>
+    <button class="btn btn-warning" type="submit">Update</button>
+  </form>
+</div>
+
+<!-- MAINTENANCE HISTORY -->
+<div class="card">
+  <h3>🗂️ Maintenance History</h3>
+  <a href="/maintenance/add/{{ equip.equipment_id }}" class="btn btn-success btn-sm" style="margin-bottom:14px;">+ Add Maintenance Log</a>
+  {% if logs %}
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Technician</th>
+        <th>Issue Reported</th>
+        <th>Resolution</th>
+        <th>Next Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.maintenance_date }}</td>
+        <td>{{ log.technician_name }}</td>
+        <td>{{ log.issue_reported }}</td>
+        <td>{{ log.resolution_notes }}</td>
+        <td style="{% if log.next_due_date and log.next_due_date < today %}color:#e53e3e; font-weight:600;{% endif %}">
+          {{ log.next_due_date }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-warning">No maintenance records yet.</div>
+  {% endif %}
+</div>
+
 {% endblock %}

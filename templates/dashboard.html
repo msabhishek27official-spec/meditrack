@@ -1,21 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>MediTrack Dashboard</h2>
-<div class="card"><strong>Total Equipment:</strong> {{ total }}</div>
-<div class="card">
-  <h3>By Status</h3>
+
+<div class="page-header">
+  <h1>📊 Dashboard</h1>
+  <p>Overview of all hospital equipment and maintenance status</p>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="label">Total Equipment</div>
+    <div class="value">{{ total }}</div>
+  </div>
   {% for row in by_status %}
-    <p>{{ row.status }}: {{ row.count }}</p>
+    <div class="stat-card {% if row.status == 'Active' %}green{% elif row.status == 'Under Maintenance' %}orange{% else %}red{% endif %}">
+      <div class="label">{{ row.status }}</div>
+      <div class="value">{{ row.count }}</div>
+    </div>
   {% endfor %}
+  <div class="stat-card red">
+    <div class="label">Overdue Maintenance</div>
+    <div class="value">{{ overdue|length }}</div>
+  </div>
 </div>
+
+<!-- OVERDUE TABLE -->
 <div class="card">
-  <h3>⚠️ Overdue Maintenance</h3>
+  <h3>⚠️ Overdue Maintenance Items</h3>
   {% if overdue %}
-  <table><tr><th>Equipment</th><th>Serial</th><th>Department</th><th>Due Date</th></tr>
-  {% for item in overdue %}
-  <tr><td>{{ item.equipment_name }}</td><td>{{ item.serial_number }}</td>
-      <td>{{ item.department }}</td><td>{{ item.next_due_date }}</td></tr>
-  {% endfor %}</table>
-  {% else %}<p>No overdue items.</p>{% endif %}
+  <table>
+    <thead>
+      <tr>
+        <th>Equipment</th>
+        <th>Serial Number</th>
+        <th>Department</th>
+        <th>Due Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in overdue %}
+      <tr>
+        <td>{{ item.equipment_name }}</td>
+        <td>{{ item.serial_number }}</td>
+        <td>{{ item.department }}</td>
+        <td style="color:#e53e3e; font-weight:600;">{{ item.next_due_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-warning">✅ No overdue maintenance items found.</div>
+  {% endif %}
 </div>
+
 {% endblock %}
